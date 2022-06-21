@@ -8,7 +8,8 @@ use trust_dns::rr::record_type::RecordType;
 use trust_dns::serialize::binary::*;
 use trust_dns::proto::error::ProtoError;
 
-enum Error {
+#[derive(Debug)]
+pub enum Error {
     Proto(ProtoError),
     IO(std::io::Error),
 }
@@ -25,7 +26,7 @@ impl From<std::io::Error> for Error {
     }
 }
 
-type Answers<'a> = &'a [Record];
+pub type Answers<'a> = &'a [Record];
 
 pub fn resolve<'a>(dns_server: &SocketAddr, domain_name: &str) -> Result<Answers<'a>, Error> {
     let mut request_as_byte: Vec<u8> = Vec::with_capacity(512); // length of 0 and capacity of 512

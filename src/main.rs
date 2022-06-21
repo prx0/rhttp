@@ -71,6 +71,6 @@ fn main() {
 
     let addr = addresses.first().unwrap();
 
-    let mac = ethernet::MacAddress::new().into();
+    let mac = ethernet::MacAddress::default().into();
     http::get(tap, mac, addr, url).expect("Unable to perform GET HTTP");
 }
