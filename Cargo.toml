@@ -1,0 +1,23 @@
+[package]
+name = "rhttp"
+version = "0.1.0"
+edition = "2021"
+authors = ["Maximilien DI DIO <mdidio@pm.me>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rand = "0.7"
+url = "2"
+
+[dependencies.clap]
+version = "3.2"
+features = ["derive"]
+
+[dependencies.smoltcp]
+version = "0.6"
+features = ["proto-igmp", "proto-ipv4", "verbose", "log"]
+
+[dependencies.trust-dns]
+version = "0.16"
+default-features = false
