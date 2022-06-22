@@ -1,4 +1,4 @@
-use std::{net::SocketAddr, str::FromStr};
+use std::{net::{SocketAddr, IpAddr, ToSocketAddrs}, str::FromStr};
 
 use clap::Parser;
 use smoltcp::phy::TapInterface;
@@ -36,7 +36,7 @@ struct Cli {
     tap_device: TapInterfaceAux,
 
     #[clap(long, default_value = "1.1.1.1")]
-    dns_server: SocketAddr,
+    dns_server: std::net::IpAddr,
 }
 
 fn main() {
@@ -52,10 +52,11 @@ fn main() {
     let domain_name = options.url.host_str()
         .expect("domain name required");
 
-    let answers = dns::resolve(&options.dns_server, domain_name)
+    let dns_server = (options.dns_server, 53u16);
+    let message = dns::resolve(dns_server, domain_name)
         .expect("Unable to resolve the domain name");
 
-    let addresses: Vec<std::net::IpAddr> = answers.iter().filter(|answer| {
+    let addresses: Vec<std::net::IpAddr> = message.answers().iter().filter(|answer| {
         return answer.record_type() == trust_dns::rr::record_type::RecordType::A
     }).map(|answer| {
         let resource = answer.rdata();
@@ -72,5 +73,5 @@ fn main() {
     let addr = addresses.first().unwrap();
 
     let mac = ethernet::MacAddress::default().into();
-    http::get(tap, mac, addr, url).expect("Unable to perform GET HTTP");
+    http::get(tap, mac, *addr, options.url).expect("Unable to perform GET HTTP");
 }

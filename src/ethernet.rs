@@ -30,10 +30,12 @@ impl Default for MacAddress {
 }
 
 impl MacAddress {
+    #[allow(unused)]
     pub fn is_local(&self) -> bool {
         (self.0[0] & 0b_0000_0010) == 0b_0000_0010
     }
 
+    #[allow(unused)]
     pub fn is_unicast(&self) -> bool {
         (self.0[0] & 0b_0000_0001) == 0b_0000_0001
     }
